@@ -3,6 +3,7 @@ import socket
 import pickle
 
 def initImgClient():
+    print("connecting")
     s = socket.socket()
     #s.setsockopt(socket.SOL_SOCKET,socket.SO_SNDBUF,1000000)
 
@@ -10,6 +11,7 @@ def initImgClient():
     server_port = 7777
 
     s.connect((server_ip,server_port))
+    print("connected")
 
 
     cap = cv2.VideoCapture(0)
