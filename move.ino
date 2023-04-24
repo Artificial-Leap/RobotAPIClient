@@ -11,9 +11,9 @@ int in4 = 5;
 String command;
 String subCommand;
 
-int speed = 10;
-int speedIncrement = 5;
-int minSpeed = 10;
+int speed = 55;
+int speedIncrement = 10;
+int minSpeed = 55;
 int maxSpeed = 255;
 
 void setup() {
@@ -32,6 +32,7 @@ void setup() {
   digitalWrite(in4, LOW);
 
   Stop();
+  speed = minSpeed;
 
   Serial.begin(9600);
   Serial.println("<Arduino is ready>");
@@ -59,14 +60,16 @@ void loop() {
     command = Serial.readStringUntil("\n");
   }
 
+
   if (command=="increase") {
     SetSpeed(true);
+    return;
   } else if (command == "decrease"){
     SetSpeed(false);
+    return;
   }
 
   if (subCommand == "forward" || subCommand == "backward") {
-  Serial.println("moving forward or backward again");
     if (command == "stop"){
         subCommand = "";
         command = "";
@@ -149,9 +152,21 @@ void SetSpeed(bool increase) {
   } else if (speed > maxSpeed) {
     speed = maxSpeed;
   }
+
+    if (subCommand == "forward") {
+      MoveFront();
+    } else if (subCommand == "backward") {
+      MoveRear();
+    }
 }
 
 void MoveFront() {
+  if (speed < minSpeed) {
+    speed = minSpeed;
+  } else if (speed > maxSpeed) {
+    speed = maxSpeed;;
+  }
+
   // Move forward
   digitalWrite(in1, HIGH);
   digitalWrite(in2, LOW);
@@ -162,6 +177,12 @@ void MoveFront() {
 }
 
 void MoveRear() {
+  if (speed < minSpeed) {
+    speed = minSpeed;
+  } else if (speed > maxSpeed) {
+    speed = maxSpeed;
+  }
+  
   // Move backward
   digitalWrite(in1, LOW);
   digitalWrite(in2, HIGH);
